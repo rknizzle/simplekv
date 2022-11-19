@@ -6,14 +6,13 @@ import (
 	"sort"
 )
 
+// rendezvousHash implements the rendezvous distributed hashing algorithm.
+// Visit https://en.wikipedia.org/wiki/Rendezvous_hashing for more info
 type rendezvousHash struct {
 	nodes []string
 }
 
 func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []string) {
-	// rendezvous distributed hashing algorithm
-	// https://en.wikipedia.org/wiki/Rendezvous_hashing
-
 	// give a score to each node for the given key
 	var scores sortableNodeScores
 	for _, node := range r.nodes {
