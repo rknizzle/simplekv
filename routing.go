@@ -8,14 +8,21 @@ import (
 	"sort"
 )
 
+type distributedHashAlgo interface {
+	// TODO addNode()
+	// TODO removeNode()
+	getNodesForKey(key string, numReplicas int) (nodes []string)
+}
+
 type routingServer struct {
-	nodes []string
 	// number of nodes that each key should be saved to
 	numReplicas int
+
+	hash distributedHashAlgo
 }
 
 func newRoutingServer() routingServer {
-	return routingServer{}
+	return routingServer{hash: rendezvousHash{}}
 }
 
 func (rs routingServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -24,12 +31,20 @@ func (rs routingServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs routingServer) getNodesForKey(key string) (nodes []string) {
+	return rs.hash.getNodesForKey(key, rs.numReplicas)
+}
+
+type rendezvousHash struct {
+	nodes []string
+}
+
+func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []string) {
 	// rendezvous distributed hashing algorithm
 	// https://en.wikipedia.org/wiki/Rendezvous_hashing
 
 	// give a score to each node for the given key
 	var scores sortableNodeScores
-	for _, node := range rs.nodes {
+	for _, node := range r.nodes {
 		singleScore := scoreForNode(key, node)
 		ns := nodeScore{node, singleScore}
 		scores = append(scores, ns)
@@ -40,7 +55,7 @@ func (rs routingServer) getNodesForKey(key string) (nodes []string) {
 
 	// Grab the top numReplica scores
 	var nodesForKey []string
-	for i := 0; i < rs.numReplicas; i++ {
+	for i := 0; i < numReplicas; i++ {
 		nodesForKey = append(nodesForKey, scores[i].node)
 	}
 

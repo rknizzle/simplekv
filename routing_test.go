@@ -7,7 +7,9 @@ import (
 
 func TestGetNodesForKey(t *testing.T) {
 	rs := routingServer{
-		nodes:       []string{"localhost:3000", "localhost:3001", "localhost:3002"},
+		hash: rendezvousHash{
+			nodes: []string{"localhost:3000", "localhost:3001", "localhost:3002"},
+		},
 		numReplicas: 2,
 	}
 
