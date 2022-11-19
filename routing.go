@@ -6,7 +6,9 @@ import (
 )
 
 type routingServer struct {
-	// TODO: system config goes here
+	nodes []string
+	// number of nodes that each key should be saved to
+	numReplicas int
 }
 
 func newRoutingServer() routingServer {
