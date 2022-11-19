@@ -34,6 +34,8 @@ func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []str
 }
 
 func scoreForNode(key string, node string) []byte {
+	// TODO: decouple the specific hashing method from the rendezvousHash algorithm probably by
+	// passing adding a hashMethod func as a type to the struct
 	hash := md5.New()
 	hash.Write([]byte(key))
 	hash.Write([]byte(node))
