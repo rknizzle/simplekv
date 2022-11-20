@@ -12,6 +12,14 @@ type storageNode struct {
 	storageEngine storageEngine
 }
 
+func (s storageNode) write(key string, value io.Reader) error {
+	return s.storageEngine.write(key, value)
+}
+
+func (s storageNode) get(key string) (io.Reader, error) {
+	return s.storageEngine.get(key)
+}
+
 // TODO: move this to where its used when the caller gets implemented
 type storageEngine interface {
 	write(key string, value io.Reader) error
