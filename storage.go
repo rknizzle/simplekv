@@ -7,6 +7,11 @@ import (
 	"io"
 )
 
+type storageNode struct {
+	label         string
+	storageEngine storageEngine
+}
+
 // TODO: move this to where its used when the caller gets implemented
 type storageEngine interface {
 	write(key string, value io.Reader) error

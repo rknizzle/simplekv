@@ -7,7 +7,20 @@ import (
 
 func TestGetNodesForKey(t *testing.T) {
 	r := rendezvousHash{
-		nodes: []string{"localhost:3000", "localhost:3001", "localhost:3002"},
+		nodes: []storageNode{
+			storageNode{
+				label:         "localhost:3000",
+				storageEngine: inmemoryStorage{},
+			},
+			storageNode{
+				label:         "localhost:3001",
+				storageEngine: inmemoryStorage{},
+			},
+			storageNode{
+				label:         "localhost:3002",
+				storageEngine: inmemoryStorage{},
+			},
+		},
 	}
 
 	key := "test.txt"

@@ -9,7 +9,7 @@ import (
 type distributedHashAlgo interface {
 	// TODO addNode()
 	// TODO removeNode()
-	getNodesForKey(key string, numReplicas int) (nodes []string)
+	getNodesForKey(key string, numReplicas int) (nodes []storageNode)
 }
 
 type routingServer struct {
@@ -28,7 +28,7 @@ func (rs routingServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(rs)
 }
 
-func (rs routingServer) getNodesForKey(key string) (nodes []string) {
+func (rs routingServer) getNodesForKey(key string) (nodes []storageNode) {
 	return rs.hash.getNodesForKey(key, rs.numReplicas)
 }
 
