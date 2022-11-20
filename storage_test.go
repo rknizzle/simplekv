@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"strings"
 	"testing"
 )
@@ -35,7 +35,7 @@ func TestGet(t *testing.T) {
 		t.Fatalf("inmemoryStorage.get() failed to get the reader with message: %s", err.Error())
 	}
 
-	val, err := ioutil.ReadAll(valueReader)
+	val, err := io.ReadAll(valueReader)
 	if err != nil {
 		t.Fatalf("Failed to read the value from the reader returned by inmemoryStorage.get() with message: %s", err.Error())
 	}
