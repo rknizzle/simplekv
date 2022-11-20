@@ -10,6 +10,7 @@ type distributedHashAlgo interface {
 	// TODO addNode()
 	// TODO removeNode()
 	getNodesForKey(key string, numReplicas int) (nodes []storageNode)
+	getAllNodes() []storageNode
 }
 
 type routingServer struct {

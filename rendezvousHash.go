@@ -12,6 +12,10 @@ type rendezvousHash struct {
 	nodes []storageNode
 }
 
+func (r rendezvousHash) getAllNodes() (nodes []storageNode) {
+	return r.nodes
+}
+
 func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []storageNode) {
 	// give a score to each node for the given key
 	var scores sortableNodeScores
