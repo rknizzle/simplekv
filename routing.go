@@ -34,7 +34,6 @@ func (rs routingServer) getNodesForKey(key string) (nodes []storageNode) {
 }
 
 func (rs routingServer) saveValueToKey(key string, value io.Reader) error {
-	// TODO: should this return a slice of nodes rather than a slice of strings labels for nodes?
 	nodes := rs.getNodesForKey(key)
 
 	for _, node := range nodes {
