@@ -23,7 +23,7 @@ func TestSaveValueToKey(t *testing.T) {
 		},
 	}
 
-	rs := newRoutingServer(rh)
+	rs := newRoutingServer(2, rh)
 
 	key := "hello"
 	value := "world"

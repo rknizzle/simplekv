@@ -19,8 +19,8 @@ type routingServer struct {
 	hash distributedHashAlgo
 }
 
-func newRoutingServer(hash distributedHashAlgo) routingServer {
-	return routingServer{hash: hash}
+func newRoutingServer(numReplicas int, hash distributedHashAlgo) routingServer {
+	return routingServer{numReplicas: numReplicas, hash: hash}
 }
 
 func (rs routingServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {

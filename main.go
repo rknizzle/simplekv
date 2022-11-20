@@ -10,6 +10,6 @@ func main() {
 	port := 8080
 
 	rh := rendezvousHash{}
-	rs := newRoutingServer(rh)
+	rs := newRoutingServer(2, rh)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), &rs)
 }
