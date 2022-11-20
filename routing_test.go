@@ -39,6 +39,8 @@ func TestSaveValueToKey(t *testing.T) {
 	// verify that the value was written to the expected number of nodes
 	nodes := rs.hash.getAllNodes()
 
+	// TODO: clean this up to verify that the value was correctly written numReplicas times but with
+	// less noise
 	for i, node := range nodes {
 		// log the value for the key on each node (even if it didnt get written to it)
 		valReader, err := node.get(key)
