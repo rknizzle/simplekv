@@ -48,7 +48,7 @@ func (ims inmemoryStorage) write(key string, value io.Reader) error {
 func (ims inmemoryStorage) get(key string) (io.Reader, error) {
 	value, ok := ims.storageMap[key]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Key: %s doesnt exist in storage", key))
+		return nil, errors.New(fmt.Sprintf("Key: '%s' doesnt exist in storage", key))
 	}
 
 	reader := bytes.NewReader(value)
