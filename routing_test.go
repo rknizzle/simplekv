@@ -55,9 +55,4 @@ func TestSaveValueToKey(t *testing.T) {
 		buf.ReadFrom(valReader)
 		fmt.Printf("Node %d: %s\n", i, buf.String())
 	}
-
-	// TODO ISSUE: saveValueToKey correctly tried to write the key & value to 2 nodes but the value
-	// was only actually written to one of the nodes. The issue is because theres only one read stream
-	// so I need to split it into a read stream for each replica
-
 }
