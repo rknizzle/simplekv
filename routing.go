@@ -38,7 +38,7 @@ func (rs routingServer) saveValueToKey(key string, value io.Reader) error {
 	nodes := rs.getNodesForKey(key)
 
 	// save the input value stream to a buffer to be used many times to write to all of the node replicas
-	// TODO: optimize this
+	// TODO: optimize this & send all writes concurrently
 	var buf bytes.Buffer
 	_, err := buf.ReadFrom(value)
 	if err != nil {
@@ -47,8 +47,6 @@ func (rs routingServer) saveValueToKey(key string, value io.Reader) error {
 
 	for _, node := range nodes {
 		byteReader := bytes.NewReader(buf.Bytes())
-		// TODO: probably do these concurrently / in parallel
-		// NOTE: this could just be a call to save to a map OR an HTTP request depending on the type
 		err := node.write(key, byteReader)
 		if err != nil {
 			return err
