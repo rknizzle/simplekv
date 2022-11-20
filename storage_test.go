@@ -6,7 +6,15 @@ import (
 )
 
 func TestWrite(t *testing.T) {
-	s := newStorage()
-	sr := strings.NewReader("hello world")
-	s.write("doesntmatteryet", sr)
+	ims := newInmemoryStorage()
+
+	key := "hello"
+	value := "world"
+	sr := strings.NewReader(value)
+
+	ims.write(key, sr)
+
+	if string(ims.storageMap[key]) != value {
+		t.Fatalf("Expected the value to be saved as %s but got %s", string(ims.storageMap[key]), value)
+	}
 }

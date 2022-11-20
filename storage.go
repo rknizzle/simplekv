@@ -1,25 +1,25 @@
 package main
 
 import (
+	"bytes"
 	"io"
-	"os"
 )
 
-type storage struct {
-	writeTo  io.Writer
-	readFrom io.Reader
+type inmemoryStorage struct {
+	storageMap map[string][]byte
 }
 
-func newStorage() storage {
-	return storage{
-		writeTo:  os.Stdout,
-		readFrom: os.Stdin,
+func newInmemoryStorage() inmemoryStorage {
+	return inmemoryStorage{storageMap: make(map[string][]byte)}
+}
+
+func (ims inmemoryStorage) write(key string, value io.Reader) error {
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(value)
+	if err != nil {
+		return err
 	}
-}
 
-func (s storage) write(key string, value io.Reader) error {
-	// TODO: i want this to block, but not read everything into memeory (stream it instead). Can
-	// io.Copy do this? Or do I need to use a pipe or something?
-	io.Copy(s.writeTo, value)
+	ims.storageMap[key] = buf.Bytes()
 	return nil
 }
