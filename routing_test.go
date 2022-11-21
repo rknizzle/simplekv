@@ -106,3 +106,39 @@ func TestSuccessfulGet(t *testing.T) {
 		t.Fatalf("Expected: %s got: %s", value, string(data))
 	}
 }
+
+func TestWithMissingKey(t *testing.T) {
+	key := "doesntExistOnAnyNode"
+
+	rh := rendezvousHash{
+		nodes: []storageNode{
+			storageNode{
+				label:         "localhost:3000",
+				storageEngine: newInmemoryStorage(),
+			},
+			storageNode{
+				label:         "localhost:3001",
+				storageEngine: newInmemoryStorage(),
+			},
+			storageNode{
+				label:         "localhost:3002",
+				storageEngine: newInmemoryStorage(),
+			},
+		},
+	}
+
+	rs := newRoutingServer(2, rh)
+
+	valueReader, err := rs.get(key)
+	if err == nil {
+		t.Fatalf("Expected to get an error trying to find the key on any node")
+	}
+
+	if valueReader != nil {
+		t.Fatalf("Expected not to get a valueReader back from any node")
+	}
+
+	if !strings.Contains(err.Error(), "Failed to get key") {
+		t.Fatalf(fmt.Sprintf("Expected to get an error about a missing key but instead got the error: %s", err.Error()))
+	}
+}
