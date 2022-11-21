@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -54,4 +55,25 @@ func (rs routingServer) saveValueToKey(key string, value io.Reader) error {
 	}
 
 	return nil
+}
+
+func (rs routingServer) get(key string) (io.Reader, error) {
+	nodes := rs.getNodesForKey(key)
+
+	var valueReader io.Reader
+	var err error
+
+	for _, node := range nodes {
+		valueReader, err = node.get(key)
+		if err != nil {
+			// TODO: keep track of the errors from each server
+		}
+	}
+
+	if valueReader != nil {
+		return valueReader, nil
+	} else {
+		// TODO: include the error messages from the servers
+		return nil, errors.New(fmt.Sprintf("Failed to get key %s", key))
+	}
 }

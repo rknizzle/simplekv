@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"strings"
 	"testing"
 )
@@ -56,5 +57,52 @@ func TestSaveValueToKey(t *testing.T) {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(valReader)
 		fmt.Printf("Node %d: %s\n", i, buf.String())
+	}
+}
+
+func TestSuccessfulGet(t *testing.T) {
+	// NOTE: the key 'hello' maps to nodes 0 and 2 when there are 3 nodes
+	key := "hello"
+	value := "world"
+
+	rh := rendezvousHash{
+		nodes: []storageNode{
+			storageNode{
+				label: "localhost:3000",
+				storageEngine: inmemoryStorage{
+					storageMap: map[string][]byte{
+						key: []byte(value),
+					},
+				},
+			},
+			storageNode{
+				label:         "localhost:3001",
+				storageEngine: newInmemoryStorage(),
+			},
+			storageNode{
+				label: "localhost:3002",
+				storageEngine: inmemoryStorage{
+					storageMap: map[string][]byte{
+						key: []byte(value),
+					},
+				},
+			},
+		},
+	}
+
+	rs := newRoutingServer(2, rh)
+
+	valueReader, err := rs.get(key)
+	if err != nil {
+		t.Fatalf("Failed to get the value with message: %s", err.Error())
+	}
+
+	data, err := io.ReadAll(valueReader)
+	if err != nil {
+		t.Fatalf("Failed to read the data from the io.Reader with message: %s", err.Error())
+	}
+
+	if string(data) != value {
+		t.Fatalf("Expected: %s got: %s", value, string(data))
 	}
 }
