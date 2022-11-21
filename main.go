@@ -11,5 +11,7 @@ func main() {
 
 	rh := rendezvousHash{}
 	rs := newRoutingServer(2, rh)
-	http.ListenAndServe(fmt.Sprintf(":%d", port), &rs)
+	api := newRestAPI(rs)
+
+	http.ListenAndServe(fmt.Sprintf(":%d", port), api)
 }

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 )
 
 type distributedHashAlgo interface {
@@ -24,11 +23,6 @@ type routingServer struct {
 
 func newRoutingServer(numReplicas int, hash distributedHashAlgo) routingServer {
 	return routingServer{numReplicas: numReplicas, hash: hash}
-}
-
-func (rs routingServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// TODO: handle requests here
-	fmt.Println(rs)
 }
 
 func (rs routingServer) getNodesForKey(key string) (nodes []storageNode) {
