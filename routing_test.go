@@ -11,15 +11,15 @@ import (
 func TestSaveValueToKey(t *testing.T) {
 	rh := rendezvousHash{
 		nodes: []storageNode{
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3000",
 				storageEngine: newInmemoryStorage(),
 			},
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3001",
 				storageEngine: newInmemoryStorage(),
 			},
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3002",
 				storageEngine: newInmemoryStorage(),
 			},
@@ -67,7 +67,7 @@ func TestSuccessfulGet(t *testing.T) {
 
 	rh := rendezvousHash{
 		nodes: []storageNode{
-			storageNode{
+			testStorageNode{
 				label: "localhost:3000",
 				storageEngine: inmemoryStorage{
 					storageMap: map[string][]byte{
@@ -75,11 +75,11 @@ func TestSuccessfulGet(t *testing.T) {
 					},
 				},
 			},
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3001",
 				storageEngine: newInmemoryStorage(),
 			},
-			storageNode{
+			testStorageNode{
 				label: "localhost:3002",
 				storageEngine: inmemoryStorage{
 					storageMap: map[string][]byte{
@@ -112,15 +112,15 @@ func TestWithMissingKey(t *testing.T) {
 
 	rh := rendezvousHash{
 		nodes: []storageNode{
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3000",
 				storageEngine: newInmemoryStorage(),
 			},
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3001",
 				storageEngine: newInmemoryStorage(),
 			},
-			storageNode{
+			testStorageNode{
 				label:         "localhost:3002",
 				storageEngine: newInmemoryStorage(),
 			},
