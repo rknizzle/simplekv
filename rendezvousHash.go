@@ -42,7 +42,7 @@ func scoreForNode(key string, node storageNode) []byte {
 	// passing adding a hashMethod func as a type to the struct
 	hash := md5.New()
 	hash.Write([]byte(key))
-	hash.Write([]byte(node.label))
+	hash.Write([]byte(node.getLabel()))
 	score := hash.Sum(nil)
 	return score
 }

@@ -7,17 +7,27 @@ import (
 	"io"
 )
 
-type storageNode struct {
+type storageNode interface {
+	write(key string, value io.Reader) error
+	get(key string) (io.Reader, error)
+	getLabel() (label string)
+}
+
+type testStorageNode struct {
 	label         string
 	storageEngine storageEngine
 }
 
-func (s storageNode) write(key string, value io.Reader) error {
+func (s testStorageNode) write(key string, value io.Reader) error {
 	return s.storageEngine.write(key, value)
 }
 
-func (s storageNode) get(key string) (io.Reader, error) {
+func (s testStorageNode) get(key string) (io.Reader, error) {
 	return s.storageEngine.get(key)
+}
+
+func (s testStorageNode) getLabel() (label string) {
+	return s.label
 }
 
 // TODO: move this to where its used when the caller gets implemented
