@@ -98,3 +98,40 @@ func TestHTTPgetMissingKey(t *testing.T) {
 		t.Fatalf("Expected an error about failing to get key but instead got %s", rec.Body.String())
 	}
 }
+
+func TestHTTPwriteSuccessful(t *testing.T) {
+	rh := rendezvousHash{
+		nodes: []storageNode{
+			testStorageNode{
+				label:         "localhost:3000",
+				storageEngine: newInmemoryStorage(),
+			},
+			testStorageNode{
+				label:         "localhost:3001",
+				storageEngine: newInmemoryStorage(),
+			},
+			testStorageNode{
+				label:         "localhost:3002",
+				storageEngine: newInmemoryStorage(),
+			},
+		},
+	}
+
+	rs := newRoutingServer(2, rh)
+
+	api := newRestAPI(rs)
+
+	reqBody := strings.NewReader("world")
+	req, err := http.NewRequest("POST", "/hello", reqBody)
+	if err != nil {
+		t.Fatalf("Failed to create the new request")
+	}
+
+	rec := httptest.NewRecorder()
+
+	api.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusCreated {
+		t.Fatalf("Expected 201 code but got %d", rec.Code)
+	}
+}
