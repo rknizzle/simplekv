@@ -5,6 +5,11 @@ import (
 	"net/http"
 )
 
+type storageEngine interface {
+	write(key string, value io.Reader) error
+	get(key string) (io.Reader, error)
+}
+
 type storageRESTapi struct {
 	se storageEngine
 }

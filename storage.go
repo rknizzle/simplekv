@@ -30,12 +30,6 @@ func (s testStorageNode) getLabel() (label string) {
 	return s.label
 }
 
-// TODO: move this to where its used when the caller gets implemented
-type storageEngine interface {
-	write(key string, value io.Reader) error
-	get(key string) (io.Reader, error)
-}
-
 type inmemoryStorage struct {
 	storageMap map[string][]byte
 }
