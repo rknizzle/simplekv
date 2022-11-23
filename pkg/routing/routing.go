@@ -5,13 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"io"
+
+	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 type distributedHashAlgo interface {
 	// TODO addNode()
 	// TODO removeNode()
-	getNodesForKey(key string, numReplicas int) (nodes []storageNode)
-	getAllNodes() []storageNode
+	getNodesForKey(key string, numReplicas int) (nodes []storage.StorageNode)
+	getAllNodes() []storage.StorageNode
 }
 
 type routingServer struct {
@@ -21,11 +23,11 @@ type routingServer struct {
 	hash distributedHashAlgo
 }
 
-func newRoutingServer(numReplicas int, hash distributedHashAlgo) routingServer {
+func NewRoutingServer(numReplicas int, hash distributedHashAlgo) routingServer {
 	return routingServer{numReplicas: numReplicas, hash: hash}
 }
 
-func (rs routingServer) getNodesForKey(key string) (nodes []storageNode) {
+func (rs routingServer) getNodesForKey(key string) (nodes []storage.StorageNode) {
 	return rs.hash.getNodesForKey(key, rs.numReplicas)
 }
 
@@ -42,7 +44,7 @@ func (rs routingServer) saveValueToKey(key string, value io.Reader) error {
 
 	for _, node := range nodes {
 		byteReader := bytes.NewReader(buf.Bytes())
-		err := node.write(key, byteReader)
+		err := node.Write(key, byteReader)
 		if err != nil {
 			return err
 		}
@@ -58,7 +60,7 @@ func (rs routingServer) get(key string) (io.Reader, error) {
 	var err error
 
 	for _, node := range nodes {
-		valueReader, err = node.get(key)
+		valueReader, err = node.Get(key)
 		if err != nil {
 			// TODO: keep track of the errors from each server
 		}

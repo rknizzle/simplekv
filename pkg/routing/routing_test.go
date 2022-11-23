@@ -6,27 +6,29 @@ import (
 	"io"
 	"strings"
 	"testing"
+
+	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 func TestSaveValueToKey(t *testing.T) {
-	rh := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label:         "localhost:3000",
-				storageEngine: newInmemoryStorage(),
+	rh := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label:         "localhost:3000",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3002",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3002",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
 		},
 	}
 
-	rs := newRoutingServer(2, rh)
+	rs := NewRoutingServer(2, rh)
 
 	key := "hello"
 	value := "world"
@@ -44,7 +46,7 @@ func TestSaveValueToKey(t *testing.T) {
 	// less noise
 	for i, node := range nodes {
 		// log the value for the key on each node (even if it didnt get written to it)
-		valReader, err := node.get(key)
+		valReader, err := node.Get(key)
 		if err != nil {
 			if strings.Contains(err.Error(), "doesnt exist") {
 				fmt.Printf("Node %d: this node doesnt have the key & value saved\n", i)
@@ -65,24 +67,24 @@ func TestSuccessfulGet(t *testing.T) {
 	key := "hello"
 	value := "world"
 
-	rh := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label: "localhost:3000",
-				storageEngine: inmemoryStorage{
-					storageMap: map[string][]byte{
+	rh := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label: "localhost:3000",
+				StorageEngine: storage.InmemoryStorage{
+					StorageMap: map[string][]byte{
 						key: []byte(value),
 					},
 				},
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label: "localhost:3002",
-				storageEngine: inmemoryStorage{
-					storageMap: map[string][]byte{
+			storage.TestStorageNode{
+				Label: "localhost:3002",
+				StorageEngine: storage.InmemoryStorage{
+					StorageMap: map[string][]byte{
 						key: []byte(value),
 					},
 				},
@@ -90,7 +92,7 @@ func TestSuccessfulGet(t *testing.T) {
 		},
 	}
 
-	rs := newRoutingServer(2, rh)
+	rs := NewRoutingServer(2, rh)
 
 	valueReader, err := rs.get(key)
 	if err != nil {
@@ -110,24 +112,24 @@ func TestSuccessfulGet(t *testing.T) {
 func TestWithMissingKey(t *testing.T) {
 	key := "doesntExistOnAnyNode"
 
-	rh := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label:         "localhost:3000",
-				storageEngine: newInmemoryStorage(),
+	rh := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label:         "localhost:3000",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3002",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3002",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
 		},
 	}
 
-	rs := newRoutingServer(2, rh)
+	rs := NewRoutingServer(2, rh)
 
 	valueReader, err := rs.get(key)
 	if err == nil {

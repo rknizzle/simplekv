@@ -11,7 +11,7 @@ type restAPI struct {
 	rs routingServer
 }
 
-func newRestAPI(rs routingServer) restAPI {
+func NewRestAPI(rs routingServer) restAPI {
 	return restAPI{rs: rs}
 }
 

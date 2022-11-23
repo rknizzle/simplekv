@@ -4,22 +4,24 @@ import (
 	"bytes"
 	"crypto/md5"
 	"sort"
+
+	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 // rendezvousHash implements the rendezvous distributed hashing algorithm.
 // Visit https://en.wikipedia.org/wiki/Rendezvous_hashing for more info
-type rendezvousHash struct {
-	nodes []storageNode
+type RendezvousHash struct {
+	Nodes []storage.StorageNode
 }
 
-func (r rendezvousHash) getAllNodes() (nodes []storageNode) {
-	return r.nodes
+func (r RendezvousHash) getAllNodes() (nodes []storage.StorageNode) {
+	return r.Nodes
 }
 
-func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []storageNode) {
+func (r RendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []storage.StorageNode) {
 	// give a score to each node for the given key
 	var scores sortableNodeScores
-	for _, node := range r.nodes {
+	for _, node := range r.Nodes {
 		singleScore := scoreForNode(key, node)
 		ns := nodeScore{node, singleScore}
 		scores = append(scores, ns)
@@ -29,7 +31,7 @@ func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []sto
 	sort.Sort(scores)
 
 	// Grab the top numReplica scores
-	var nodesForKey []storageNode
+	var nodesForKey []storage.StorageNode
 	for i := 0; i < numReplicas; i++ {
 		nodesForKey = append(nodesForKey, scores[i].node)
 	}
@@ -37,12 +39,12 @@ func (r rendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []sto
 	return nodesForKey
 }
 
-func scoreForNode(key string, node storageNode) []byte {
+func scoreForNode(key string, node storage.StorageNode) []byte {
 	// TODO: decouple the specific hashing method from the rendezvousHash algorithm probably by
 	// passing adding a hashMethod func as a type to the struct
 	hash := md5.New()
 	hash.Write([]byte(key))
-	hash.Write([]byte(node.getLabel()))
+	hash.Write([]byte(node.GetLabel()))
 	score := hash.Sum(nil)
 	return score
 }
@@ -50,7 +52,7 @@ func scoreForNode(key string, node storageNode) []byte {
 // sortable list of nodes by hash score
 type nodeScore struct {
 	// label for the node
-	node storageNode
+	node storage.StorageNode
 	// hash score given to the node for a particular key
 	score []byte
 }

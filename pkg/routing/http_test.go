@@ -5,6 +5,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 func TestHTTPgetSuccessful(t *testing.T) {
@@ -12,24 +14,24 @@ func TestHTTPgetSuccessful(t *testing.T) {
 	value := "world"
 
 	// preload the nodes with the 'hello' key
-	rh := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label: "localhost:3000",
-				storageEngine: inmemoryStorage{
-					storageMap: map[string][]byte{
+	rh := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label: "localhost:3000",
+				StorageEngine: storage.InmemoryStorage{
+					StorageMap: map[string][]byte{
 						key: []byte(value),
 					},
 				},
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label: "localhost:3002",
-				storageEngine: inmemoryStorage{
-					storageMap: map[string][]byte{
+			storage.TestStorageNode{
+				Label: "localhost:3002",
+				StorageEngine: storage.InmemoryStorage{
+					StorageMap: map[string][]byte{
 						key: []byte(value),
 					},
 				},
@@ -37,8 +39,8 @@ func TestHTTPgetSuccessful(t *testing.T) {
 		},
 	}
 
-	rs := newRoutingServer(2, rh)
-	api := newRestAPI(rs)
+	rs := NewRoutingServer(2, rh)
+	api := NewRestAPI(rs)
 
 	// get the hello key
 	req, err := http.NewRequest("GET", "/hello", nil)
@@ -60,26 +62,26 @@ func TestHTTPgetSuccessful(t *testing.T) {
 }
 
 func TestHTTPgetMissingKey(t *testing.T) {
-	rh := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label:         "localhost:3000",
-				storageEngine: newInmemoryStorage(),
+	rh := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label:         "localhost:3000",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3002",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3002",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
 		},
 	}
 
-	rs := newRoutingServer(2, rh)
+	rs := NewRoutingServer(2, rh)
 
-	api := newRestAPI(rs)
+	api := NewRestAPI(rs)
 
 	req, err := http.NewRequest("GET", "/hello", nil)
 	if err != nil {
@@ -100,26 +102,26 @@ func TestHTTPgetMissingKey(t *testing.T) {
 }
 
 func TestHTTPwriteSuccessful(t *testing.T) {
-	rh := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label:         "localhost:3000",
-				storageEngine: newInmemoryStorage(),
+	rh := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label:         "localhost:3000",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			testStorageNode{
-				label:         "localhost:3002",
-				storageEngine: newInmemoryStorage(),
+			storage.TestStorageNode{
+				Label:         "localhost:3002",
+				StorageEngine: storage.NewInmemoryStorage(),
 			},
 		},
 	}
 
-	rs := newRoutingServer(2, rh)
+	rs := NewRoutingServer(2, rh)
 
-	api := newRestAPI(rs)
+	api := NewRestAPI(rs)
 
 	reqBody := strings.NewReader("world")
 	req, err := http.NewRequest("POST", "/hello", reqBody)

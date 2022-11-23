@@ -16,7 +16,7 @@ type storageRESTapi struct {
 	se storageEngine
 }
 
-func newStorageRESTapi(se storageEngine) storageRESTapi {
+func NewStorageRESTapi(se storageEngine) storageRESTapi {
 	return storageRESTapi{se: se}
 }
 

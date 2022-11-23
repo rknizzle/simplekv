@@ -10,10 +10,10 @@ import (
 func TestStorageHTTPgetSuccessful(t *testing.T) {
 
 	// preload the node with the key 'hello'
-	storageEngine := newInmemoryStorage()
-	storageEngine.storageMap["hello"] = []byte("world")
+	storageEngine := NewInmemoryStorage()
+	storageEngine.StorageMap["hello"] = []byte("world")
 
-	api := newStorageRESTapi(storageEngine)
+	api := NewStorageRESTapi(storageEngine)
 
 	// get the hello key
 	req, err := http.NewRequest("GET", "/hello", nil)
@@ -35,8 +35,8 @@ func TestStorageHTTPgetSuccessful(t *testing.T) {
 }
 
 func TestStorageHTTPgetMissingKey(t *testing.T) {
-	storageEngine := newInmemoryStorage()
-	api := newStorageRESTapi(storageEngine)
+	storageEngine := NewInmemoryStorage()
+	api := NewStorageRESTapi(storageEngine)
 
 	req, err := http.NewRequest("GET", "/hello", nil)
 	if err != nil {
@@ -58,8 +58,8 @@ func TestStorageHTTPgetMissingKey(t *testing.T) {
 }
 
 func TestStorageHTTPwriteSuccessful(t *testing.T) {
-	storageEngine := newInmemoryStorage()
-	api := newStorageRESTapi(storageEngine)
+	storageEngine := NewInmemoryStorage()
+	api := NewStorageRESTapi(storageEngine)
 
 	reqBody := strings.NewReader("world")
 	req, err := http.NewRequest("POST", "/hello", reqBody)

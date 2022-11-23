@@ -2,22 +2,24 @@ package routing
 
 import (
 	"testing"
+
+	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 func TestGetNodesForKey(t *testing.T) {
-	r := rendezvousHash{
-		nodes: []storageNode{
-			testStorageNode{
-				label:         "localhost:3000",
-				storageEngine: inmemoryStorage{},
+	r := RendezvousHash{
+		Nodes: []storage.StorageNode{
+			storage.TestStorageNode{
+				Label:         "localhost:3000",
+				StorageEngine: storage.InmemoryStorage{},
 			},
-			testStorageNode{
-				label:         "localhost:3001",
-				storageEngine: inmemoryStorage{},
+			storage.TestStorageNode{
+				Label:         "localhost:3001",
+				StorageEngine: storage.InmemoryStorage{},
 			},
-			testStorageNode{
-				label:         "localhost:3002",
-				storageEngine: inmemoryStorage{},
+			storage.TestStorageNode{
+				Label:         "localhost:3002",
+				StorageEngine: storage.InmemoryStorage{},
 			},
 		},
 	}

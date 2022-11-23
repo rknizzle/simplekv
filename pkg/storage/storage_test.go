@@ -7,7 +7,7 @@ import (
 )
 
 func TestWrite(t *testing.T) {
-	ims := newInmemoryStorage()
+	ims := NewInmemoryStorage()
 
 	key := "hello"
 	value := "world"
@@ -15,18 +15,18 @@ func TestWrite(t *testing.T) {
 
 	ims.write(key, sr)
 
-	if string(ims.storageMap[key]) != value {
-		t.Fatalf("Expected the value to be saved as %s but got %s", string(ims.storageMap[key]), value)
+	if string(ims.StorageMap[key]) != value {
+		t.Fatalf("Expected the value to be saved as %s but got %s", string(ims.StorageMap[key]), value)
 	}
 }
 
 func TestGet(t *testing.T) {
-	ims := newInmemoryStorage()
+	ims := NewInmemoryStorage()
 
 	key := "hello"
 	value := "world"
 
-	ims.storageMap = map[string][]byte{
+	ims.StorageMap = map[string][]byte{
 		key: []byte(value),
 	}
 
