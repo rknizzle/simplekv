@@ -1,8 +1,10 @@
 package storage
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type storageEngine interface {
@@ -16,6 +18,22 @@ type storageRESTapi struct {
 
 func newStorageRESTapi(se storageEngine) storageRESTapi {
 	return storageRESTapi{se: se}
+}
+
+func respondWithError(message string, w http.ResponseWriter) {
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Header().Set("Content-Type", "application/json")
+
+	resp := make(map[string]string)
+	resp["message"] = message
+
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		w.Write([]byte("{\"message\":\"Error\"}"))
+		return
+	}
+
+	w.Write(jsonResp)
 }
 
 func (api storageRESTapi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -41,4 +59,10 @@ func (api storageRESTapi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		w.Write(nil)
 	}
+}
+
+func getKeyFromURL(path string) string {
+	indexOfLastSlash := strings.LastIndex(path, "/")
+	key := path[indexOfLastSlash+1:]
+	return key
 }
