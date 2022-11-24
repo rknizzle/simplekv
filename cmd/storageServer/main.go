@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	storageEngine := storage.NewInmemoryStorage()
+	storageEngine := storage.NewFileSystemStorage()
 	api := storage.NewStorageRESTapi(storageEngine)
 
 	port := 8000
