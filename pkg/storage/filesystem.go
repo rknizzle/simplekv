@@ -15,7 +15,7 @@ func NewFileSystemStorage() fileSystemStorage {
 	return fileSystemStorage{}
 }
 
-func (se fileSystemStorage) write(key string, value io.Reader) error {
+func (se fileSystemStorage) Write(key string, value io.Reader) error {
 	file, err := os.Create(key)
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func (se fileSystemStorage) write(key string, value io.Reader) error {
 	return nil
 }
 
-func (se fileSystemStorage) get(key string) (io.Reader, error) {
+func (se fileSystemStorage) Get(key string) (io.Reader, error) {
 	file, err := os.Open(key)
 	if err != nil {
 		return nil, err

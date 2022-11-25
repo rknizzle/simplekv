@@ -13,7 +13,7 @@ func TestWrite(t *testing.T) {
 	value := "world"
 	sr := strings.NewReader(value)
 
-	ims.write(key, sr)
+	ims.Write(key, sr)
 
 	if string(ims.StorageMap[key]) != value {
 		t.Fatalf("Expected the value to be saved as %s but got %s", string(ims.StorageMap[key]), value)
@@ -30,7 +30,7 @@ func TestGet(t *testing.T) {
 		key: []byte(value),
 	}
 
-	valueReader, err := ims.get(key)
+	valueReader, err := ims.Get(key)
 	if err != nil {
 		t.Fatalf("inmemoryStorage.get() failed to get the reader with message: %s", err.Error())
 	}

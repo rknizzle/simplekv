@@ -4,21 +4,19 @@ import (
 	"bytes"
 	"crypto/md5"
 	"sort"
-
-	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 // rendezvousHash implements the rendezvous distributed hashing algorithm.
 // Visit https://en.wikipedia.org/wiki/Rendezvous_hashing for more info
 type RendezvousHash struct {
-	Nodes []storage.StorageNode
+	Nodes []StorageNode
 }
 
-func (r RendezvousHash) getAllNodes() (nodes []storage.StorageNode) {
+func (r RendezvousHash) getAllNodes() (nodes []StorageNode) {
 	return r.Nodes
 }
 
-func (r RendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []storage.StorageNode) {
+func (r RendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []StorageNode) {
 	// give a score to each node for the given key
 	var scores sortableNodeScores
 	for _, node := range r.Nodes {
@@ -31,7 +29,7 @@ func (r RendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []sto
 	sort.Sort(scores)
 
 	// Grab the top numReplica scores
-	var nodesForKey []storage.StorageNode
+	var nodesForKey []StorageNode
 	for i := 0; i < numReplicas; i++ {
 		nodesForKey = append(nodesForKey, scores[i].node)
 	}
@@ -39,7 +37,7 @@ func (r RendezvousHash) getNodesForKey(key string, numReplicas int) (nodes []sto
 	return nodesForKey
 }
 
-func scoreForNode(key string, node storage.StorageNode) []byte {
+func scoreForNode(key string, node StorageNode) []byte {
 	// TODO: decouple the specific hashing method from the rendezvousHash algorithm probably by
 	// passing adding a hashMethod func as a type to the struct
 	hash := md5.New()
@@ -52,7 +50,7 @@ func scoreForNode(key string, node storage.StorageNode) []byte {
 // sortable list of nodes by hash score
 type nodeScore struct {
 	// label for the node
-	node storage.StorageNode
+	node StorageNode
 	// hash score given to the node for a particular key
 	score []byte
 }

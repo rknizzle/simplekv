@@ -15,8 +15,8 @@ func TestHTTPgetSuccessful(t *testing.T) {
 
 	// preload the nodes with the 'hello' key
 	rh := RendezvousHash{
-		Nodes: []storage.StorageNode{
-			storage.TestStorageNode{
+		Nodes: []StorageNode{
+			TestStorageNode{
 				Label: "localhost:3000",
 				StorageEngine: storage.InmemoryStorage{
 					StorageMap: map[string][]byte{
@@ -24,11 +24,11 @@ func TestHTTPgetSuccessful(t *testing.T) {
 					},
 				},
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3001",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label: "localhost:3002",
 				StorageEngine: storage.InmemoryStorage{
 					StorageMap: map[string][]byte{
@@ -63,16 +63,16 @@ func TestHTTPgetSuccessful(t *testing.T) {
 
 func TestHTTPgetMissingKey(t *testing.T) {
 	rh := RendezvousHash{
-		Nodes: []storage.StorageNode{
-			storage.TestStorageNode{
+		Nodes: []StorageNode{
+			TestStorageNode{
 				Label:         "localhost:3000",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3001",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3002",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
@@ -103,16 +103,16 @@ func TestHTTPgetMissingKey(t *testing.T) {
 
 func TestHTTPwriteSuccessful(t *testing.T) {
 	rh := RendezvousHash{
-		Nodes: []storage.StorageNode{
-			storage.TestStorageNode{
+		Nodes: []StorageNode{
+			TestStorageNode{
 				Label:         "localhost:3000",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3001",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3002",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},

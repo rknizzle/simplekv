@@ -5,15 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
-
-	"github.com/rknizzle/simplekv/pkg/storage"
 )
 
 type distributedHashAlgo interface {
 	// TODO addNode()
 	// TODO removeNode()
-	getNodesForKey(key string, numReplicas int) (nodes []storage.StorageNode)
-	getAllNodes() []storage.StorageNode
+	getNodesForKey(key string, numReplicas int) (nodes []StorageNode)
+	getAllNodes() []StorageNode
 }
 
 type routingServer struct {
@@ -27,7 +25,7 @@ func NewRoutingServer(numReplicas int, hash distributedHashAlgo) routingServer {
 	return routingServer{numReplicas: numReplicas, hash: hash}
 }
 
-func (rs routingServer) getNodesForKey(key string) (nodes []storage.StorageNode) {
+func (rs routingServer) getNodesForKey(key string) (nodes []StorageNode) {
 	return rs.hash.getNodesForKey(key, rs.numReplicas)
 }
 

@@ -17,8 +17,8 @@ func main() {
 
 	// preload a key in the nodes just for testing
 	rh := routing.RendezvousHash{
-		Nodes: []storage.StorageNode{
-			storage.TestStorageNode{
+		Nodes: []routing.StorageNode{
+			routing.TestStorageNode{
 				Label: "localhost:3000",
 				StorageEngine: storage.InmemoryStorage{
 					StorageMap: map[string][]byte{
@@ -26,11 +26,11 @@ func main() {
 					},
 				},
 			},
-			storage.TestStorageNode{
+			routing.TestStorageNode{
 				Label:         "localhost:3001",
 				StorageEngine: storage.NewInmemoryStorage(),
 			},
-			storage.TestStorageNode{
+			routing.TestStorageNode{
 				Label: "localhost:3002",
 				StorageEngine: storage.InmemoryStorage{
 					StorageMap: map[string][]byte{

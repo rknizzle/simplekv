@@ -7,16 +7,16 @@ import (
 	"strings"
 )
 
-type storageEngine interface {
-	write(key string, value io.Reader) error
-	get(key string) (io.Reader, error)
+type StorageEngine interface {
+	Write(key string, value io.Reader) error
+	Get(key string) (io.Reader, error)
 }
 
 type storageRESTapi struct {
-	se storageEngine
+	se StorageEngine
 }
 
-func NewStorageRESTapi(se storageEngine) storageRESTapi {
+func NewStorageRESTapi(se StorageEngine) storageRESTapi {
 	return storageRESTapi{se: se}
 }
 
@@ -40,7 +40,7 @@ func (api storageRESTapi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	key := getKeyFromURL(r.URL.Path)
 
 	if r.Method == "GET" {
-		valueReader, err := api.se.get(key)
+		valueReader, err := api.se.Get(key)
 		if err != nil {
 			respondWithError(err.Error(), w)
 			return
@@ -50,7 +50,7 @@ func (api storageRESTapi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		io.Copy(w, valueReader)
 
 	} else if r.Method == "POST" {
-		err := api.se.write(key, r.Body)
+		err := api.se.Write(key, r.Body)
 		if err != nil {
 			respondWithError(err.Error(), w)
 			return

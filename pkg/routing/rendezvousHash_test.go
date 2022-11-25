@@ -8,16 +8,16 @@ import (
 
 func TestGetNodesForKey(t *testing.T) {
 	r := RendezvousHash{
-		Nodes: []storage.StorageNode{
-			storage.TestStorageNode{
+		Nodes: []StorageNode{
+			TestStorageNode{
 				Label:         "localhost:3000",
 				StorageEngine: storage.InmemoryStorage{},
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3001",
 				StorageEngine: storage.InmemoryStorage{},
 			},
-			storage.TestStorageNode{
+			TestStorageNode{
 				Label:         "localhost:3002",
 				StorageEngine: storage.InmemoryStorage{},
 			},
