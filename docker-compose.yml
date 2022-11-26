@@ -1,0 +1,45 @@
+version: '3'
+
+networks:
+  simplekv:
+    driver: bridge
+
+services:
+  routing_server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.routing
+    depends_on:
+      - storage_server_1
+      - storage_server_2
+      - storage_server_3
+    networks:
+      - simplekv
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+
+  storage_server_1:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.storage
+    restart: on-failure
+    networks:
+      - simplekv
+
+  storage_server_2:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.storage
+    restart: on-failure
+    networks:
+      - simplekv
+
+  storage_server_3:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.storage
+    restart: on-failure
+    networks:
+      - simplekv
