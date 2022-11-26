@@ -1,0 +1,25 @@
+# Build Stage
+FROM golang:1.19.3-alpine as build-env
+ 
+ENV APP_NAME simplekv
+ENV CMD_PATH cmd/routingServer/main.go
+ 
+# Copy app into image
+COPY . $GOPATH/src/$APP_NAME
+WORKDIR $GOPATH/src/$APP_NAME
+ 
+# Build application
+RUN CGO_ENABLED=0 go build -v -o /$APP_NAME $GOPATH/src/$APP_NAME/$CMD_PATH
+ 
+##########
+# Run Stage
+FROM alpine:3.16
+ 
+ENV APP_NAME simplekv 
+ 
+# Copy only required data into this image
+COPY --from=build-env /$APP_NAME .
+ 
+EXPOSE 8080
+ 
+CMD ./$APP_NAME
