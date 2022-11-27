@@ -19,6 +19,14 @@ services:
       - "8080:8080"
     expose:
       - "8080"
+    # Start the routing server with the 3 storage servers
+    command: [
+      "./simplekv",
+      "--replicas", "2",
+      "--storage", "http://storage_server_1:8000",
+      "--storage", "http://storage_server_2:8000",
+      "--storage", "http://storage_server_3:8000",
+    ]
 
   storage_server_1:
     build:
