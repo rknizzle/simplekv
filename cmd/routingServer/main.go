@@ -17,10 +17,8 @@ func (s *storageNodeFlags) Set(value string) error {
 }
 
 func main() {
-	// setup the routing server based on the config
-	port := 8080
-
 	replicas := flag.Int("replicas", 2, "Number of replicas to save data to")
+	port := flag.Int("port", 8080, "Port for the HTTP server to listen on")
 
 	var storageNodeURLs storageNodeFlags
 	flag.Var(&storageNodeURLs, "storage", "The URL of a storage node")
@@ -36,7 +34,7 @@ func main() {
 	rs := routing.NewRoutingServer(*replicas, rh)
 	api := routing.NewRestAPI(rs)
 
-	http.ListenAndServe(fmt.Sprintf(":%d", port), api)
+	http.ListenAndServe(fmt.Sprintf(":%d", *port), api)
 }
 
 func URLsToStorageNodes(urls []string) []routing.StorageNode {
