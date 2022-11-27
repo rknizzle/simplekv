@@ -34,7 +34,10 @@ func main() {
 	rs := routing.NewRoutingServer(*replicas, rh)
 	api := routing.NewRestAPI(rs)
 
-	http.ListenAndServe(fmt.Sprintf(":%d", *port), api)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", *port), api)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func URLsToStorageNodes(urls []string) []routing.StorageNode {
