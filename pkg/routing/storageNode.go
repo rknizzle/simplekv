@@ -40,7 +40,7 @@ func (s RemoteStorageNode) Write(key string, value io.Reader) error {
 	url := fmt.Sprintf("%s/%s", s.URL, key)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", url, value)
+	req, err := http.NewRequest("PUT", url, value)
 	if err != nil {
 		return err
 	}

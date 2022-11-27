@@ -62,7 +62,7 @@ func TestStorageHTTPwriteSuccessful(t *testing.T) {
 	api := NewStorageRESTapi(storageEngine)
 
 	reqBody := strings.NewReader("world")
-	req, err := http.NewRequest("POST", "/hello", reqBody)
+	req, err := http.NewRequest("PUT", "/hello", reqBody)
 	if err != nil {
 		t.Fatalf("Failed to create the new request")
 	}

@@ -44,7 +44,7 @@ func (api restAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// stream the value to the response
 		io.Copy(w, valueReader)
 
-	} else if r.Method == "POST" {
+	} else if r.Method == "PUT" {
 		err := api.rs.saveValueToKey(key, r.Body)
 		if err != nil {
 			respondWithError(err.Error(), w)
