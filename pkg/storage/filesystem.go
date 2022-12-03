@@ -3,6 +3,7 @@ package storage
 import (
 	"io"
 	"os"
+	"strings"
 )
 
 type fileSystemStorage struct {
@@ -33,6 +34,12 @@ func (se fileSystemStorage) Write(key string, value io.Reader) error {
 func (se fileSystemStorage) Get(key string) (io.ReadCloser, error) {
 	file, err := os.Open(key)
 	if err != nil {
+
+		// 'key not found' case
+		if strings.Contains(err.Error(), "no such file or directory") {
+			return nil, keyNotFoundError{key}
+		}
+
 		return nil, err
 	}
 
