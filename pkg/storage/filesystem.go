@@ -1,23 +1,27 @@
 package storage
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strings"
 )
 
 type fileSystemStorage struct {
-	// NOTE: There could be an abstraction to the file system here so I could mock it out and test
-	// these methods.
-	// Alternatively I can just mock at the StorageEngine level and test the system using InmemoryStorage
+	dir string
 }
 
-func NewFileSystemStorage() fileSystemStorage {
-	return fileSystemStorage{}
+func NewFileSystemStorage() (fileSystemStorage, error) {
+	err := os.Mkdir("./store", os.FileMode(0777))
+	if err != nil {
+		return fileSystemStorage{}, err
+	}
+
+	return fileSystemStorage{dir: "store"}, nil
 }
 
 func (se fileSystemStorage) Write(key string, value io.Reader) error {
-	file, err := os.Create(key)
+	file, err := os.Create(fmt.Sprintf("./%s/%s", se.dir, key))
 	if err != nil {
 		return err
 	}
@@ -32,7 +36,7 @@ func (se fileSystemStorage) Write(key string, value io.Reader) error {
 }
 
 func (se fileSystemStorage) Get(key string) (io.ReadCloser, error) {
-	file, err := os.Open(key)
+	file, err := os.Open(fmt.Sprintf("./%s/%s", se.dir, key))
 	if err != nil {
 
 		// 'key not found' case

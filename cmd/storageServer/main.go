@@ -10,7 +10,11 @@ import (
 )
 
 func main() {
-	storageEngine := storage.NewFileSystemStorage()
+	storageEngine, err := storage.NewFileSystemStorage()
+	if err != nil {
+		panic(err)
+	}
+
 	api := storage.NewStorageRESTapi(storageEngine)
 
 	port, err := getPortFromEnv()
