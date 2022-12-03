@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"strings"
 )
 
 type restAPI struct {
@@ -32,7 +31,7 @@ func respondWithError(message string, w http.ResponseWriter) {
 }
 
 func (api restAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	key := getKeyFromURL(r.URL.Path)
+	key := r.URL.Path[1:]
 
 	if r.Method == "GET" {
 		valueReader, err := api.rs.get(key)
@@ -54,10 +53,4 @@ func (api restAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		w.Write(nil)
 	}
-}
-
-func getKeyFromURL(path string) string {
-	indexOfLastSlash := strings.LastIndex(path, "/")
-	key := path[indexOfLastSlash+1:]
-	return key
 }
