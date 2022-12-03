@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -123,7 +124,8 @@ func TestHTTPwriteSuccessful(t *testing.T) {
 
 	api := NewRestAPI(rs)
 
-	reqBody := strings.NewReader("world")
+	bodyReader := strings.NewReader("world")
+	reqBody := io.NopCloser(bodyReader)
 	req, err := http.NewRequest("PUT", "/hello", reqBody)
 	if err != nil {
 		t.Fatalf("Failed to create the new request")

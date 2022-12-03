@@ -51,10 +51,10 @@ func (rs routingServer) saveValueToKey(key string, value io.Reader) error {
 	return nil
 }
 
-func (rs routingServer) get(key string) (io.Reader, error) {
+func (rs routingServer) get(key string) (io.ReadCloser, error) {
 	nodes := rs.getNodesForKey(key)
 
-	var valueReader io.Reader
+	var valueReader io.ReadCloser
 	var err error
 
 	for _, node := range nodes {

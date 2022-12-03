@@ -11,7 +11,7 @@ import (
 
 type StorageNode interface {
 	Write(key string, value io.Reader) error
-	Get(key string) (io.Reader, error)
+	Get(key string) (io.ReadCloser, error)
 	GetLabel() (label string)
 }
 
@@ -24,7 +24,7 @@ func (s TestStorageNode) Write(key string, value io.Reader) error {
 	return s.StorageEngine.Write(key, value)
 }
 
-func (s TestStorageNode) Get(key string) (io.Reader, error) {
+func (s TestStorageNode) Get(key string) (io.ReadCloser, error) {
 	return s.StorageEngine.Get(key)
 }
 
@@ -60,7 +60,7 @@ func (s RemoteStorageNode) Write(key string, value io.Reader) error {
 	return nil
 }
 
-func (s RemoteStorageNode) Get(key string) (io.Reader, error) {
+func (s RemoteStorageNode) Get(key string) (io.ReadCloser, error) {
 	url := fmt.Sprintf("%s/%s", s.URL, key)
 
 	resp, err := http.Get(url)

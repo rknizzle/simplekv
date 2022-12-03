@@ -45,10 +45,10 @@ func (api storageRESTapi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			respondWithError(err.Error(), w)
 			return
 		}
+		defer valueReader.Close()
 
 		// stream the value to the response
 		io.Copy(w, valueReader)
-
 	} else if r.Method == "PUT" {
 		err := api.se.Write(key, r.Body)
 		if err != nil {

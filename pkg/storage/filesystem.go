@@ -30,7 +30,7 @@ func (se fileSystemStorage) Write(key string, value io.Reader) error {
 	return nil
 }
 
-func (se fileSystemStorage) Get(key string) (io.Reader, error) {
+func (se fileSystemStorage) Get(key string) (io.ReadCloser, error) {
 	file, err := os.Open(key)
 	if err != nil {
 		return nil, err

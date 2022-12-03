@@ -26,12 +26,12 @@ func (ims InmemoryStorage) Write(key string, value io.Reader) error {
 	return nil
 }
 
-func (ims InmemoryStorage) Get(key string) (io.Reader, error) {
+func (ims InmemoryStorage) Get(key string) (io.ReadCloser, error) {
 	value, ok := ims.StorageMap[key]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("Key: '%s' doesnt exist in storage", key))
 	}
 
 	reader := bytes.NewReader(value)
-	return reader, nil
+	return io.NopCloser(reader), nil
 }
