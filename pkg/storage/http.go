@@ -7,11 +7,6 @@ import (
 	"strings"
 )
 
-type StorageEngine interface {
-	Write(key string, value io.Reader) error
-	Get(key string) (io.Reader, error)
-}
-
 type storageRESTapi struct {
 	se StorageEngine
 }
